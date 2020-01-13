@@ -2,7 +2,7 @@
 set -e
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
-source ${DIR}/../../scripts/utils.sh
+source ${DIR}/utils.sh
 
 verify_installed "git"
 verify_installed "ansible"
