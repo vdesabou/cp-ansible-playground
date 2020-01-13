@@ -1,4 +1,7 @@
-language: bash
+language: python
+
+python: 3.6
+
 os:
 - linux
 services:
@@ -6,12 +9,19 @@ services:
 before_install:
 - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 - sudo apt-get -y install git
-- sudo apt-get -y install ansible ansible-playbook
+- sudo apt-get update -qq
+
+install:
+  # Install Ansible.
+  - pip install ansible
+
 jobs:
   include:
-  - name: Version 5.3.2
-    env: TAG="5.3.2"
+  - name: Version 5.3.1
+    env: TAG="5.3.1"
 script:
 - bash scripts/create-image.sh "$TAG"
 env:
   global:
+  - secure: HyNIb2MZBHMTVgsEv3JVLymolS4ceVb8eY8qhfg3HuS54i+9wobKPOxOIzxLADj1F+acQ/YuP7XCNIz9vhvZ0DgqIjuiDM/lyc9TZBgdU+jHP9emqu7CESlWvB3o/27t1BtjgDDMWw/mSvkMs67rbu78bYKLp0GAYYXhIvnHqx9VRWaFaCmaXxp8U5BLB/Uxp+p/jPzvW5z0ctjal3fKQB+oWAM21pFnmI09+ehyj6FyRzxmmBUZwUOKNu2eKN4PlRl/2N7RU9D5x1usqw0889ArEnGy+2KxP/0KFLiXokmrC4hrAYiRhRVCtpRejdgnPyy8davT3VWhhublrIgxsaWAPsute9fBn6JQRmm8oCZ38xx1w2rmNHlYdK616TSMqAQ35vNWAVRk4VkMkuUAIrutnhtL9ZaonzMiZYlti1PvDZQmd0ixtf4XjTS7elYMcTXUHwgVW9fCOZYDKl/CXPPnZQlZrRmRkdPL0Gj8xnuE9wi+fBczEXLmTKEUTSPf2wQLidsEQBfPQlyov/YrxgEOmamHELIlzU2JbJC7pOnIoc17dYNrUIWZHuS3Gp0kca30qRD8QsMbfqWcS3wjbSpA+0+ClrSdPxQ2k0Icr4ZwTy2X1sp24kDXH8+Qj3caNlil4mR3v7GUn/coNN4BmcbUkd6grvqbjTekEG8EYSU=
+  - secure: WDLESoIPKPwgCR+SfQr6PWAUlPjX397rOYwmhnzTskO8VOuqovDTe9UCguUqHApk23/QwL9jPaR5izswz/azplER2P/g1C4UEVjvYic5BnFPaPyGI6MxRpb7M9EHfJjxvLIC1BrnejVn74LI8/rPSxjZ4hiNDZzAStNzJhdo3t09usBou6ZCPuKR/WCEobxZDa2W6i0PWQvWrx8Dkzsty4p986vJWK+M3tiTJuNDBQ1JPJJRRkqfsqYPOteF0W4a+4bEpUcWWjkhnMjJWyvJ8qryKjT58N8gP1VSijQVITJo576Esuul4U5EL8fIg68ALWjtiLXrWEfx0b8gWLoPE5UyLhKl2ExI0O2TPWJBuUMtgp0FyNjoR6lKRt4V6PM9Xl9ODyvu5sOU3GHfVwhNlZOBtSp8zqPVeejBweXvBU7JWWRxGrtlAizgVsvz5e7zFgamEXyQrW0kjHfw3Rk7w4QWibXPnVboL1Gz4XW4L958NxYPcOzY2Hqz+eXpxW8sX8AVldDhVeJX6ScoA2sLJf/RdcuYRednxNHqCNs4mPM4AZhbTkDiT29Xuz55lGUNiDm5b8N02bYYs4Pw+5dz+/srGn9PYxV9gXSEjDavz2RwzFQ3WlKsf55UUGHXpiCIQww4uy4AVr363RjlT+IUYpibBfJ2P0dALh8zXdfOOsM=
