@@ -10,7 +10,7 @@ verify_installed "ansible-playbook"
 
 if [ -z "$1" ]
   then
-    echo "ERROR: No argument supplied. cp-kafka-connect-base version must be provided."
+    echo "ERROR: No argument supplied. Version must be provided."
     exit 1
 fi
 
@@ -23,7 +23,7 @@ then
 fi
 
 # copy custom files
-cp ${DIR}/hosts.yml ${DIR}/cp-ansible/
+cp ${DIR}/../hosts.yml ${DIR}/cp-ansible/
 
 docker-compose down -v
 docker-compose up -d
@@ -64,12 +64,13 @@ docker commit connect vdesabou/cp-ansible-playground-connect:$TAG
 docker commit control-center vdesabou/cp-ansible-playground-control-center:$TAG
 
 
-# docker push vdesabou/cp-ansible-playground-zookeeper1:$TAG
-# docker push vdesabou/cp-ansible-playground-broker1:$TAG
-# docker push vdesabou/cp-ansible-playground-broker2:$TAG
-# docker push vdesabou/cp-ansible-playground-broker3:$TAG
-# docker push vdesabou/cp-ansible-playground-schema-registry:$TAG
-# docker push vdesabou/cp-ansible-playground-ksql-server:$TAG
-# docker push vdesabou/cp-ansible-playground-rest-proxy:$TAG
-# docker push vdesabou/cp-ansible-playground-connect:$TAG
-# docker push vdesabou/cp-ansible-playground-control-center:$TAG
+log "INFO: Pushing images to Docker Hub."
+docker push vdesabou/cp-ansible-playground-zookeeper1:$TAG
+docker push vdesabou/cp-ansible-playground-broker1:$TAG
+docker push vdesabou/cp-ansible-playground-broker2:$TAG
+docker push vdesabou/cp-ansible-playground-broker3:$TAG
+docker push vdesabou/cp-ansible-playground-schema-registry:$TAG
+docker push vdesabou/cp-ansible-playground-ksql-server:$TAG
+docker push vdesabou/cp-ansible-playground-rest-proxy:$TAG
+docker push vdesabou/cp-ansible-playground-connect:$TAG
+docker push vdesabou/cp-ansible-playground-control-center:$TAG
