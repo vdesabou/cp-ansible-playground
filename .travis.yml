@@ -1,0 +1,17 @@
+language: bash
+os:
+- linux
+services:
+- docker
+before_install:
+- echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+- sudo apt-get -y install git
+- sudo apt-get -y install ansible ansible-playbook
+jobs:
+  include:
+  - name: Version 5.3.2
+    env: TAG="5.3.2"
+script:
+- bash scripts/create-image.sh "$TAG"
+env:
+  global:
