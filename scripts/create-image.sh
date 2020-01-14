@@ -34,7 +34,6 @@ cd ${DIR}/../cp-ansible
 log "INFO: Checking Ansible can connect over DOCKER."
 ansible -i hosts.yml all -m ping
 
-exit 0
 log "INFO: Run the all.yml playbook."
 ansible-playbook -i hosts.yml all.yml
 
