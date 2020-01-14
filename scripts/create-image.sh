@@ -16,23 +16,25 @@ fi
 
 export TAG=$1
 
-if [ ! -d ${DIR}/cp-ansible ]
+cd ${DIR}/..
+if [ ! -d ${DIR}/../cp-ansible ]
 then
     log "INFO: Getting cp-ansible from Github."
     git clone https://github.com/confluentinc/cp-ansible
 fi
 
 # copy custom files
-cp ${DIR}/../hosts.yml ${DIR}/cp-ansible/
+cp ${DIR}/../hosts.yml ${DIR}/../cp-ansible/
 
 docker-compose down -v
 docker-compose up -d
 
-cd ${DIR}/cp-ansible
+cd ${DIR}/../cp-ansible
 
 log "INFO: Checking Ansible can connect over DOCKER."
 ansible -i hosts.yml all -m ping
 
+exit 0
 log "INFO: Run the all.yml playbook."
 ansible-playbook -i hosts.yml all.yml
 
