@@ -10,17 +10,30 @@ verify_installed "ansible-playbook"
 
 if [ -z "$1" ]
   then
-    echo "ERROR: No argument supplied. Version must be provided."
+    logerror "ERROR: No argument supplied. Version must be provided."
     exit 1
 fi
 
 export TAG=$1
 
+if [ "$TAG" = "5.3.1" ]
+then
+  GIT_BRANCH="5.3.1-post"
+elif [ "$TAG" = "5.4.0" ]
+then
+  GIT_BRANCH="5.4.0-post"
+else
+    logerror "ERROR: Version $TAG not supported. Only 5.3.1 and 5.4.0 are supported"
+    exit 1
+fi
+
 cd ${DIR}/..
 if [ ! -d ${DIR}/../cp-ansible ]
 then
-    log "INFO: Getting cp-ansible from Github."
+    log "Getting cp-ansible from Github (branch $GIT_BRANCH)"
     git clone https://github.com/confluentinc/cp-ansible
+    cd ${DIR}/../cp-ansible
+    git checkout "${GIT_BRANCH}"
 fi
 
 # copy custom files
@@ -31,18 +44,15 @@ docker-compose up -d
 
 cd ${DIR}/../cp-ansible
 
-log "INFO: Checking Ansible can connect over DOCKER."
+
+log "Checking Ansible can connect over DOCKER."
 ansible -i hosts.yml all -m ping
 
-log "INFO: Run the all.yml playbook."
-ansible-playbook -i hosts.yml all.yml
-
-# if it fails, try to re-run this command
-# ansible-playbook -vvvv -i hosts.yml all.yml
-
+log "Run the all.yml playbook."
+retry ansible-playbook -i hosts.yml all.yml
 
 # ls /etc/systemd/system/
-log "INFO: Stopping all services."
+log "Stopping all services."
 docker exec control-center systemctl stop confluent-control-center
 docker exec ksql-server systemctl stop confluent-ksql
 docker exec rest-proxy systemctl stop confluent-kafka-rest
@@ -53,7 +63,7 @@ docker exec broker2 systemctl stop confluent-kafka
 docker exec broker3 systemctl stop confluent-kafka
 docker exec zookeeper1 systemctl stop confluent-zookeeper
 
-log "INFO: Creating new images from snapshot."
+log "Creating new images from snapshot."
 docker commit zookeeper1 vdesabou/cp-ansible-playground-zookeeper1:$TAG
 docker commit broker1 vdesabou/cp-ansible-playground-broker1:$TAG
 docker commit broker2 vdesabou/cp-ansible-playground-broker2:$TAG
@@ -65,7 +75,7 @@ docker commit connect vdesabou/cp-ansible-playground-connect:$TAG
 docker commit control-center vdesabou/cp-ansible-playground-control-center:$TAG
 
 
-log "INFO: Pushing images to Docker Hub."
+log "Pushing images to Docker Hub."
 docker push vdesabou/cp-ansible-playground-zookeeper1:$TAG
 docker push vdesabou/cp-ansible-playground-broker1:$TAG
 docker push vdesabou/cp-ansible-playground-broker2:$TAG
