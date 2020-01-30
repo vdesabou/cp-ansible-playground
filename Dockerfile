@@ -1,6 +1,6 @@
 FROM ubuntu:18.04
 RUN apt-get update && \
-    apt-get install -y openssh-server pwgen netcat net-tools curl wget && \
+    apt-get install -y openssh-server pwgen netcat net-tools curl wget rsync && \
     apt-get clean all
 # python and relevant tools
 RUN apt-get update && apt-get install -y \
