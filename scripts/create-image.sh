@@ -58,9 +58,14 @@ docker exec ksql-server systemctl stop confluent-ksql
 docker exec rest-proxy systemctl stop confluent-kafka-rest
 docker exec schema-registry systemctl stop confluent-schema-registry
 docker exec connect systemctl stop confluent-kafka-connect
-docker exec broker1 systemctl stop confluent-kafka
-docker exec broker2 systemctl stop confluent-kafka
-docker exec broker3 systemctl stop confluent-kafka
+brokerservice="confluent-kafka"
+if [ "$TAG" = "5.4.0" ]
+then
+  brokerservice="confluent-server"
+fi
+docker exec broker1 systemctl stop $brokerservice
+docker exec broker2 systemctl stop $brokerservice
+docker exec broker3 systemctl stop $brokerservice
 docker exec zookeeper1 systemctl stop confluent-zookeeper
 
 log "Creating new images from snapshot."
