@@ -25,6 +25,9 @@ function verify_installed()
   fi
 }
 
+# https://stackoverflow.com/a/24067243
+function version_gt() { test "$(printf '%s\n' "$@" | sort -V | head -n 1)" != "$1"; }
+
 function retry() {
   local n=1
   local max=3

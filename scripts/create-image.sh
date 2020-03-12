@@ -22,8 +22,11 @@ then
 elif [ "$TAG" = "5.4.0" ]
 then
   GIT_BRANCH="5.4.0-post"
+elif [ "$TAG" = "5.4.1" ]
+then
+  GIT_BRANCH="5.4.1-post"
 else
-    logerror "ERROR: Version $TAG not supported. Only 5.3.1 and 5.4.0 are supported"
+    logerror "ERROR: Version $TAG not supported. Only 5.3.1, 5.4.0 or 5.4.1 are supported"
     exit 1
 fi
 
@@ -59,9 +62,8 @@ docker exec rest-proxy systemctl stop confluent-kafka-rest
 docker exec schema-registry systemctl stop confluent-schema-registry
 docker exec connect systemctl stop confluent-kafka-connect
 brokerservice="confluent-kafka"
-if [ "$TAG" = "5.4.0" ]
-then
-  brokerservice="confluent-server"
+if version_gt $TAG "5.3.2"; then
+    brokerservice="confluent-server"
 fi
 docker exec broker1 systemctl stop $brokerservice
 docker exec broker2 systemctl stop $brokerservice
