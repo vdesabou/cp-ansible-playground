@@ -1,8 +1,8 @@
-# cp-ansible-playground
+# cp-ansible-playground [![Build Status](https://travis-ci.com/vdesabou/cp-ansible-playground.svg?branch=master)](https://travis-ci.com/vdesabou/cp-ansible-playground)
 
-[![Build Status](https://travis-ci.com/vdesabou/cp-ansible-playground.svg?branch=master)](https://travis-ci.com/vdesabou/cp-ansible-playground)
+![asciinema](asciinema.gif)
 
-## How it is used
+## How to use
 
 See this [link](https://github.com/vdesabou/kafka-docker-playground/tree/master/other/cp-ansible-playground)
 
