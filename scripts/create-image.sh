@@ -60,12 +60,16 @@ retry ansible-playbook -i hosts.yml all.yml
 # ls /etc/systemd/system/
 log "Stopping all services."
 docker exec control-center systemctl stop confluent-control-center
-docker exec ksql-server systemctl stop confluent-ksql
+ksqlservice="confluent-ksql"
+if version_gt $TAG "5.4.10"; then
+    ksqlservice="confluent-ksqldb"
+fi
+docker exec ksql-server systemctl stop $ksqlservice
 docker exec rest-proxy systemctl stop confluent-kafka-rest
 docker exec schema-registry systemctl stop confluent-schema-registry
 docker exec connect systemctl stop confluent-kafka-connect
 brokerservice="confluent-kafka"
-if version_gt $TAG "5.3.2"; then
+if version_gt $TAG "5.3.10"; then
     brokerservice="confluent-server"
 fi
 docker exec broker1 systemctl stop $brokerservice
