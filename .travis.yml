@@ -26,7 +26,12 @@ jobs:
   - name: "Version 5.5.0"
     env: TAG="5.5.0"
     script: bash scripts/create-image.sh "$TAG"
-
+  - name: "Version 5.5.1"
+    env: TAG="5.5.1"
+    script: bash scripts/create-image.sh "$TAG"
+  - name: "Version 6.6.0"
+    env: TAG="6.6.0"
+    script: bash scripts/create-image.sh "$TAG"
 
 env:
   global:
