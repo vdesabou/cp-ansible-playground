@@ -1,9 +1,9 @@
 FROM ubuntu:18.04
 RUN apt-get update && \
-    apt-get install -y openssh-server pwgen netcat net-tools curl wget rsync && \
-    apt-get clean all
+    apt-get install -y --no-install-recommends openssh-server pwgen netcat net-tools curl wget rsync && \
+    apt-get clean all && rm -rf /var/lib/apt/lists/*
 # python and relevant tools
-RUN apt-get update && apt-get install -y \
+RUN apt-get update && apt-get install -y --no-install-recommends \
         build-essential software-properties-common \
  python \
  python-dev \
@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y \
  zlib1g-dev \
  libyaml-dev \
  libffi-dev \
- python-pip
+ python-pip python-setuptools && apt-get clean all && rm -rf /var/lib/apt/lists/*
 # Latest versions of python tools via pip
 RUN pip install --upgrade pip \
  virtualenv \
