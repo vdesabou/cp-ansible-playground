@@ -1,9 +1,9 @@
 FROM ubuntu:18.04
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends openssh-server pwgen netcat net-tools curl wget rsync && \
+    apt-get install -y openssh-server pwgen netcat net-tools curl wget rsync && \
     apt-get clean all && rm -rf /var/lib/apt/lists/*
 # python and relevant tools
-RUN apt-get update && apt-get install -y --no-install-recommends \
+RUN apt-get update && apt-get install -y \
         build-essential software-properties-common \
  python \
  python-dev \
