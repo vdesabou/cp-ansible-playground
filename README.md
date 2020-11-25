@@ -1,4 +1,4 @@
-# cp-ansible-playground [![Build Status](https://travis-ci.com/vdesabou/cp-ansible-playground.svg?branch=master)](https://travis-ci.com/vdesabou/cp-ansible-playground)
+# cp-ansible-playground ![CI](https://github.com/vdesabou/cp-ansible-playground/workflows/CI/badge.svg?branch=master)
 
 ![asciinema](asciinema.gif)
 
