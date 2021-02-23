@@ -93,6 +93,8 @@ df -h
 
 docker system df
 
+docker system prune -a -f
+
 log "Creating new images from snapshot."
 docker commit zookeeper1 vdesabou/cp-ansible-playground-zookeeper1:$TAG
 docker commit broker1 vdesabou/cp-ansible-playground-broker1:$TAG
