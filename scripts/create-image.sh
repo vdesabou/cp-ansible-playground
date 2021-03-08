@@ -98,6 +98,12 @@ docker exec broker2 systemctl stop $brokerservice
 docker exec broker3 systemctl stop $brokerservice
 docker exec zookeeper1 systemctl stop confluent-zookeeper
 
+df -h
+
+docker system df
+
+docker system prune -a -f
+
 log "Creating new images from snapshot."
 docker commit zookeeper1 vdesabou/cp-ansible-playground-zookeeper1:$TAG
 docker commit broker1 vdesabou/cp-ansible-playground-broker1:$TAG
