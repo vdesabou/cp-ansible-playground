@@ -12,7 +12,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     name: ${{ matrix.tag }}
     strategy:
       fail-fast: false
