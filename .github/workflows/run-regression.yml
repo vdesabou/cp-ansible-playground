@@ -37,6 +37,7 @@ jobs:
 
       - name: Docker login
         run: |
+          whoami
           echo "$DOCKER_PASSWORD" | docker login -u vdesabou --password-stdin
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
