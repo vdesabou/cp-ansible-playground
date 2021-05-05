@@ -11,9 +11,25 @@ on:
   workflow_dispatch:
 
 jobs:
+  start-runner:
+    name: Start Github self-hosted runner
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-3
+
+    - name: Start EC2 instance github-actions-runner-vsaboulin
+      run: |
+        aws ec2 start-instances --instance-ids i-089ef31a75cb3f0e6
+
   build:
     runs-on: self-hosted
     name: ${{ matrix.tag }}
+    needs: start-runner # required to start the main job when the runner is read
     strategy:
       fail-fast: false
       matrix:
@@ -37,10 +53,28 @@ jobs:
 
       - name: Docker login
         run: |
-          whoami
           echo "$DOCKER_PASSWORD" | docker login -u vdesabou --password-stdin
         env:
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
       - name: Create images
         run: bash scripts/create-image.sh "${{ matrix.tag }}"
+
+  stop-runner:
+    name: Stop Github self-hosted runner
+    needs:
+      - start-runner # required to get output from the start-runner job
+      - build # required to wait when the main job is done
+    if: ${{ always() }} # required to stop the runner even if the error happened in the previous jobs
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-3
+
+    - name: Stop EC2 instance github-actions-runner-vsaboulin
+      run: |
+        aws ec2 stop-instances --instance-ids i-089ef31a75cb3f0e6
