@@ -31,17 +31,17 @@ then
     cd ${DIR}/../cp-ansible
     git checkout "${GIT_BRANCH}"
 
-    # get last commit time unix timestamp for the branch
-    now=$(date +%s)
-    last_git_commit=$(git log --format=%ct | head -1)
-    elapsed_git_time=$((now-last_git_commit))
-    if [[ $elapsed_git_time -gt 604800 ]]
-    then
-        log "####################################################"
-        log "Skipping as last commit on this branch was more than 7 days ago: it was done $(displaytime $elapsed_git_time) ago."
-        log "####################################################"
-        exit 0
-    fi
+    # # get last commit time unix timestamp for the branch
+    # now=$(date +%s)
+    # last_git_commit=$(git log --format=%ct | head -1)
+    # elapsed_git_time=$((now-last_git_commit))
+    # if [[ $elapsed_git_time -gt 604800 ]]
+    # then
+    #     log "####################################################"
+    #     log "Skipping as last commit on this branch was more than 7 days ago: it was done $(displaytime $elapsed_git_time) ago."
+    #     log "####################################################"
+    #     exit 0
+    # fi
 fi
 
 # copy custom files
