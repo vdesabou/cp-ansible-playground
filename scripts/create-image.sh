@@ -56,8 +56,12 @@ cd ${DIR}/../cp-ansible
 log "Checking Ansible can connect over DOCKER."
 ansible -i hosts.yml all -m ping
 
-log "Run the all.yml playbook."
-retry ansible-playbook -i hosts.yml all.yml
+ALL_PLAYBOOK="all.yml"
+if version_gt $TAG "6.9.99"; then
+    ALL_PLAYBOOK="playbooks/all.yml"
+fi
+log "Run the $ALL_PLAYBOOK playbook."
+retry ansible-playbook -i hosts.yml $ALL_PLAYBOOK
 
 # ls /etc/systemd/system/
 log "Stopping all services."
