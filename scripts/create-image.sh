@@ -22,46 +22,56 @@ if ! version_gt $TAG "5.3.0"; then
 fi
 
 GIT_BRANCH="$TAG-post"
+ANSIBLE_VER=$(get_ansible_version)
 
-cd ${DIR}/..
-if [ ! -d ${DIR}/../cp-ansible ]
+# https://docs.confluent.io/ansible/current/ansible-download.html#download-ansible-for-ansible-2-11-or-higher-hosts
+if version_gt $ANSIBLE_VER "2.10" && version_gt $TAG "6.9.9"
 then
-    log "Getting cp-ansible from Github (branch $GIT_BRANCH)"
-    git clone https://github.com/confluentinc/cp-ansible
+    log "Using ansible-galaxy to install cp-ansible"
+    ansible-galaxy collection install git+https://github.com/confluentinc/cp-ansible.git
+else
+    cd ${DIR}/..
+    if [ ! -d ${DIR}/../cp-ansible ]
+    then
+        log "Getting cp-ansible from Github (branch $GIT_BRANCH)"
+        git clone https://github.com/confluentinc/cp-ansible
+        cd ${DIR}/../cp-ansible
+        git checkout "${GIT_BRANCH}"
+
+        # get last commit time unix timestamp for the branch
+        # now=$(date +%s)
+        # last_git_commit=$(git log --format=%ct | head -1)
+        # elapsed_git_time=$((now-last_git_commit))
+        # if [[ $elapsed_git_time -gt 604800 ]]
+        # then
+        #     log "####################################################"
+        #     log "Skipping as last commit on this branch was more than 7 days ago: it was done $(displaytime $elapsed_git_time) ago."
+        #     log "####################################################"
+        #     exit 0
+        # fi
+    fi
+
+    # copy custom files
+    cp ${DIR}/../hosts.yml ${DIR}/../cp-ansible/
     cd ${DIR}/../cp-ansible
-    git checkout "${GIT_BRANCH}"
-
-    # get last commit time unix timestamp for the branch
-    # now=$(date +%s)
-    # last_git_commit=$(git log --format=%ct | head -1)
-    # elapsed_git_time=$((now-last_git_commit))
-    # if [[ $elapsed_git_time -gt 604800 ]]
-    # then
-    #     log "####################################################"
-    #     log "Skipping as last commit on this branch was more than 7 days ago: it was done $(displaytime $elapsed_git_time) ago."
-    #     log "####################################################"
-    #     exit 0
-    # fi
 fi
-
-# copy custom files
-cp ${DIR}/../hosts.yml ${DIR}/../cp-ansible/
 
 docker-compose down -v
 docker-compose up -d
 
-cd ${DIR}/../cp-ansible
-
-
 log "Checking Ansible can connect over DOCKER."
 ansible -i hosts.yml all -m ping
 
-ALL_PLAYBOOK="all.yml"
-if version_gt $TAG "6.9.99"; then
-    ALL_PLAYBOOK="playbooks/all.yml"
+# https://docs.confluent.io/ansible/current/ansible-install.html
+if version_gt $ANSIBLE_VER "2.10" && version_gt $TAG "6.9.9"
+then
+    export ANSIBLE_CONFIG=${DIR}/../ansible.cfg
+    log "Run the confluent.platform.all playbook."
+    retry ansible-playbook -i hosts.yml confluent.platform.all
+else
+    log "Run the all.yml playbook."
+    retry ansible-playbook -i hosts.yml all.yml
 fi
-log "Run the $ALL_PLAYBOOK playbook."
-retry ansible-playbook -i hosts.yml $ALL_PLAYBOOK
 
 # ls /etc/systemd/system/
 log "Stopping all services."

@@ -16,6 +16,10 @@ function logwarn() {
   echo -e "$PURPLE`date +"%H:%M:%S"` $@$NC"
 }
 
+function get_ansible_version() {
+  ansible --version | grep "core" | cut -d'[' -f2 | cut -d']' -f1 | cut -d' ' -f 2
+}
+
 function verify_installed()
 {
   local cmd="$1"
