@@ -28,7 +28,7 @@ ANSIBLE_VER=$(get_ansible_version)
 if version_gt $ANSIBLE_VER "2.10" && version_gt $TAG "6.9.9"
 then
     log "Using ansible-galaxy to install cp-ansible"
-    ansible-galaxy collection install git+https://github.com/confluentinc/cp-ansible.git
+    ansible-galaxy collection install confluent.platform:$TAG
 else
     cd ${DIR}/..
     if [ ! -d ${DIR}/../cp-ansible ]
