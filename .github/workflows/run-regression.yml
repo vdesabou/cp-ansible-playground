@@ -17,7 +17,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        tag: ["6.2.12","7.0.11","7.1.9","7.2.7","7.3.5","7.4.2","7.5.2"]
+        tag: ["7.1.9","7.2.7","7.3.5","7.4.2","7.5.2"]
     steps:
       - uses: actions/checkout@v3
 
